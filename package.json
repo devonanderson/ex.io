@@ -1,6 +1,6 @@
 {
   "name": "ex.io",
-  "description": "Integrates Socket.io into Express, providing Express style routing, and access to Express sessions",
+  "description": "Full integration of Socket.io into Express using only exposed Express API. Allows Express style routing and also pushes requests through the Express middleware stack.",
   "version": "0.0.1",
   "repository": {
     "type": "git",
@@ -13,12 +13,13 @@
   ],
   "main": "./lib/exio",
   "dependencies": {
-    "express": "3.*",
     "underscore": "1.*",
     "cookie": "*",
     "connect": "2.*",
+    "through": "*",
     "socket.io": "0.9.*"
   },
   "engines": {
     "node": "0.10.*"
+  }
 }

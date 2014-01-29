@@ -1,0 +1,26 @@
+doctype 
+html
+	head
+	title= title
+	link(rel='stylesheet', href='/stylesheets/style.css')
+	script(src='/socket.io/socket.io.js')
+	script().
+		var socket = io.connect('http://localhost');
+
+		socket.emit('test:success', {
+			data: 'This is some data'
+		});
+
+		socket.on('success', function (req) {
+			document.getElementById('message').innerHTML = req.message;
+		});
+
+		socket.on('triggered', function (req) {
+			console.log(req.message);
+		});
+
+		socket.emit('test:error');
+		socket.emit('test:triggerStart');
+		socket.emit('test:disconnect');
+body
+	block content
