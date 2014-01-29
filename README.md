@@ -3,6 +3,8 @@ ex.io
 
 Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level. Provides socket client management with the ability to define custom ID's for each socket. Also provides a wrapper around Socket.io's built in Redis store for integration into production environments.
 
+**NOTE: Ex.io does not currently handle rooms, working on it**
+
 #### Getting started:
 
 Ex.io is still in Alpha, and not yet available on npm. Clone this repo into your project root, then 
@@ -51,4 +53,29 @@ exio.route('myRoute', middleware, middleware, function (req, res) {
 
 #### Settings
 
-
+```
+limit:        0, 
+cookie_key:   'express.sid',
+production:   false,
+redis_host:   '',
+redis_port:   '',
+redis_pass:   '',
+authenticate: function () { 
+  return true;
+},
+authorize:    function () {
+  return true;
+},
+generate:     function (socket) { 
+  return socket.id;
+},
+connect:      function () { },
+disconnect:   function () { },
+transports:   [
+  'websocket',
+  'flashsocket',
+  'htmlfile',
+  'xhr-polling',
+  'jsonp-polling'
+]
+```
