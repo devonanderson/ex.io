@@ -54,24 +54,24 @@ exio.route('myRoute', middleware, middleware, function (req, res) {
 #### Settings
 
 ```
-limit:        0, 
-cookie_key:   'express.sid',
-production:   false,
-redis_host:   '',
-redis_port:   '',
-redis_pass:   '',
-authenticate: function () { 
+limit:        0,                       //You can limit the number of concurrent connections
+cookie_key:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
+production:   false,                   //Production mode uses a Redis store to scale over multiple processes
+redis_host:   '',                      //The host of the Redis store (production only)
+redis_port:   '',                      //The port of the Redis store (production only)
+redis_pass:   '',                      //The password for the Redis store if you have one set (production only)
+authorize:    function (handshake) {   //Function called when negotiating the socket handshake, return a boolean
   return true;
 },
-authorize:    function () {
+authenticate: function (socket, req) { //Function called when a socket connects, returns a boolean value
   return true;
 },
-generate:     function (socket) { 
+generate:     function (socket, req) { //Function called to generate an ID, has access to the session, the session ID, the socket ID, and anything within the main Express middleware stack
   return socket.id;
 },
-connect:      function () { },
-disconnect:   function () { },
-transports:   [
+connect:      function (socket, req) { }, //Function called when a socket successfully connects
+disconnect:   function (req, message) { },  //Function called when a socket is disconnected
+transports:   [   //Which types of transports to use and the order in which they are used (production only)
   'websocket',
   'flashsocket',
   'htmlfile',
@@ -79,3 +79,5 @@ transports:   [
   'jsonp-polling'
 ]
 ```
+
+You can run the example located in the test folder to get an idea of what is needed for a base setup, as well as defining routes and handling incoming and outgoing messages.
