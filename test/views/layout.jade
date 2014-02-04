@@ -7,8 +7,10 @@ html
 	script().
 		var socket = io.connect('http://localhost');
 
-		socket.emit('test:success', {
-			data: 'This is some data'
+		socket.on('exio:connect', function () { //ex.io has it's own connect event, which may be fired after the Socket.io one
+			socket.emit('test:success', {
+				data: 'This is some data'
+			});
 		});
 
 		socket.on('success', function (req) {
