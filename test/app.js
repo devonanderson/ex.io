@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('abc123'));
-app.use(express.session({ key: 'express.sid', secret: 'abc123' }));
+app.use(express.session({ secret: 'abc123' }));
 app.use(exio.middleware); //the exio middleware is required, put it wherever you want your request to end.
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
