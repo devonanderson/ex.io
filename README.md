@@ -51,6 +51,18 @@ exio.route('myRoute', middleware, middleware, function (req, res) {
 
 ```
 
+For the browser
+
+```
+var socket = io.connect('http://www.example.com');
+
+socket.on('exio:connect', function () { //ex.io has it's own connect event, which may be fired after the Socket.io one
+	socket.emit('myRoute', {
+		data: 'This is some data'
+	});
+});
+```
+
 #### Settings
 
 ```
