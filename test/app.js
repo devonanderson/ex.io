@@ -7,7 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
-var exio = require('../lib/exio.js');
+var ionize = require('../lib/ionize.js')();
 
 var app = express();
 
@@ -22,14 +22,10 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('abc123'));
 app.use(express.session({ secret: 'abc123' }));
-app.use(exio.middleware); //the exio middleware is required, put it wherever you want your request to end.
+app.use(ionize.middleware); //the ionize middleware is required, put it wherever you want your request to end.
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
+app.use(express.errorHandler());
 
 app.get('/', routes.index);
 
@@ -39,7 +35,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 /*	initializes the app and get's socket.io to listen to the express server,
 	you must pass the express app as well as the server */
-exio = exio.create(app, {  
+ionize = ionize.create(app, {  
   	secret: 'abc123' //make sure you use the same secret you passed to the session middleware
 }).listen(server);
 
@@ -56,7 +52,7 @@ var endSuccess = function (req, res) {
 	console.log(req.socketRoute); //you can get the route that the socket is using 
 	console.log(req.foo); //variables attached through middleware can be accessed
 	console.log(req.session); //you get the session along with anything else from the main app connect stack
-	console.log(req.data) //access the passed data inside req.data;
+	console.log(req.body) //access the passed data inside req.body;
 
 	//You can access the socket at each step
 	req.io.emit('success', {
@@ -65,13 +61,11 @@ var endSuccess = function (req, res) {
 }
 
 //routes are defined almost exactly like express and includes chainable middleware
-exio.route('test:success', middlewareSuccess, endSuccess, null); //pass null as the last argument if you don't need an error handler
+ionize.route('test:success', middlewareSuccess, endSuccess); //pass null as the last argument if you don't need an error handler
 
 var middlewareError = function (req, res, next) {
 	console.log('This is middleware with an error');
-
-	req.err(new Error('This is an error')); //you can pass an error back to the error callback and end the stack
-	return;
+	next(new Error('This makes it to the error handler'))
 }
 
 var endError = function (req, res) {
@@ -82,7 +76,7 @@ var errorHandler = function (req, res) {
 	console.log('I handled you error');
 }
 
-exio.route('test:error', middlewareError, endError, errorHandler); //pass an error handler that will be accessible in the request object
+ionize.route('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
 
 var triggerRoute = function (req, res) {
 	var clientID = req.clientID; //the id of the connected socket is available;
@@ -93,27 +87,27 @@ var triggerRoute = function (req, res) {
 
 	/* 	you can trigger routes from anywhere within Node and pass it data,
 		this works very well when using user ID's to generate socket ID's  */
-	exio.triggerRoute('test:triggerFinish', clientID, data); 
+	ionize.triggerRoute('test:triggerFinish', clientID, data); 
 }
 
-exio.route('test:triggerStart', triggerRoute, null);
+ionize.route('test:triggerStart', triggerRoute);
 
 var triggerCaught = function (req, res) {
 	console.log('Caught the triggered route');
-	console.log(req.data);
+	console.log(req.body);
 
-	req.io.emit('triggered', req.data); //everything available in a normal route is available in a triggered route
+	req.io.emit('triggered', req.body); //everything available in a normal route is available in a triggered route
 }
 
-exio.route('test:triggerFinish', triggerCaught, null);
+ionize.route('test:triggerFinish', triggerCaught);
 
 var disconnect = function (req, res) {
 	var clientID = req.clientID;
 
 	//you can also disconnect clients at any point with a clientID
-	exio.disconnectClient(clientID, function (err) {
+	ionize.disconnectClient(clientID, function (err) {
 		console.log('I disconnected you');
 	});
 }
 
-exio.route('test:disconnect', disconnect, null);
+ionize.route('test:disconnect', disconnect);

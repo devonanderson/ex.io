@@ -1,17 +1,17 @@
 {
-  "name": "ex.io",
+  "name": "ionize",
   "description": "Full integration of Socket.io into Express using only exposed Express API. Allows Express style routing and also pushes requests through the Express middleware stack.",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/devonanderson/ex.io.git"
+    "url": "https://github.com/devonanderson/ionize.git"
   },
   "keywords": [
     "websockets",
     "socket.io",
     "express"
   ],
-  "main": "./lib/exio",
+  "main": "./lib/ionize",
   "dependencies": {
     "underscore": "1.*",
     "cookie": "*",
