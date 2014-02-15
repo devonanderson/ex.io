@@ -65,12 +65,12 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 
 ```
 limit:        0,  		       //You can limit the number of concurrent connections
-cookie_check: true,		       //make sure the cookie is present (set to false if you are using as an API)
-cookie_key:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
+cookieCheck: true,		       //make sure the cookie is present (set to false if you are using as an API)
+cookieKey:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
 production:   false,                   //Production mode uses a Redis store to scale over multiple processes
-redis_host:   '',                      //The host of the Redis store (production only)
-redis_port:   '',                      //The port of the Redis store (production only)
-redis_pass:   '',                      //The password for the Redis store if you have one set (production only)
+redisHost:   '',                      //The host of the Redis store (production only)
+redisPort:   '',                      //The port of the Redis store (production only)
+redisPass:   '',                      //The password for the Redis store if you have one set (production only)
 authorize:    function (handshake) {   //Function called when negotiating the socket handshake, return a boolean
   return true;
 },
