@@ -64,7 +64,7 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 #### Settings
 
 ```
-limit:        0,  		       //You can limit the number of concurrent connections
+limit:        0,  		       //You can limit the number of connections
 cookieCheck: true,		       //make sure the cookie is present (set to false if you are using as an API)
 cookieKey:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
 production:   false,                   //Production mode uses a Redis store to scale over multiple processes
