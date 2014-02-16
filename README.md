@@ -64,10 +64,10 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ### Settings
 
 ```
-limit:       0,  		       //You can limit the number of connections
+limit:       0,                        //You can limit the number of connections
 useCookie:   true,		       //make sure the cookie is present (set to false if you are using as an API)
 cookieKey:   'express.sid',            //The key of the Express cookie, only need to change if you are using a custom key
-useRedis:    true	               //Use Redis to store clients, necessary when spanning multiple processes
+useRedis:    false                     //Use Redis to store clients, necessary when spanning multiple processes
 redisHost:   '',                       //The host of the Redis store
 redisPort:   '',                       //The port of the Redis store
 redisPass:   '',                       //The password for the Redis store if you have one set
@@ -100,9 +100,9 @@ redisPort: '',
 redisPass: '',
 set: {
 	key: value,
-	key: value		//Used to pass settings to io.set(key, value);
+	key: value              //Used to pass settings to io.set(key, value);
 },
-enable: [ value, value ]	//Used to enable settings with io.enable(value);
+enable: [ value, value ]        //Used to enable settings with io.enable(value);
 ```
 
 Alternatively you can retrieve the Socket.io instance and do your own custom configuration using
