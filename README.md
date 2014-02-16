@@ -16,7 +16,7 @@ Then in your app.js file
 ```
 var express = require('express')
   , http = require('http')
-  , ionize = require('ionize')();
+  , ionize = require('ionize');
   
 var app = express();
   
