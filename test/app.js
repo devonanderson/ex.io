@@ -22,7 +22,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('abc123'));
 app.use(express.session({ secret: 'abc123' }));
-app.use(ionize.middleware); //the ionize middleware is required, put it wherever you want your request to end.
+app.use(ionize.middleware()); //the ionize middleware is required, put it wherever you want your request to end.
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.errorHandler());
@@ -72,10 +72,6 @@ var endError = function (req, res) {
 	console.log('You will never make it here');
 }
 
-var errorHandler = function (req, res) {
-	console.log('I handled you error');
-}
-
 ionize.route('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
 
 var triggerRoute = function (req, res) {
@@ -85,8 +81,7 @@ var triggerRoute = function (req, res) {
 		message: 'This route was triggered'
 	};
 
-	/* 	you can trigger routes from anywhere within Node and pass it data,
-		this works very well when using user ID's to generate socket ID's  */
+	/* 	you can trigger routes from anywhere within Node and pass it data */
 	ionize.triggerRoute('test:triggerFinish', clientID, data); 
 }
 
