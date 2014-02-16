@@ -25,7 +25,7 @@ app.set(...);
 app.set(...);
 app.set(express.cookieParser('abc123');
 app.set(express.session({ secret: 'abc123' }));
-app.set(ionize.middleware); //place ionize middleware wherever you want the request to end and move on to the route
+app.set(ionize.middleware()); //place ionize middleware wherever you want the request to end and move on to the route
 app.set(app.router) //ionize middleware must be placed above the app.router
 
 var server = http.createServer(app).listen(3000);
