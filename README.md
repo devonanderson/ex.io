@@ -30,7 +30,7 @@ app.set(app.router) //ionize middleware must be placed above the app.router
 
 var server = http.createServer(app).listen(3000);
 
-//minimum needed for ex.io to work
+//minimum needed for ionize to work
 ionize = ionize.create(app, {
   secret: 'abc123' 
 }).listen(server);
@@ -64,8 +64,8 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ### Settings
 
 ```
-limit:        0,  		       //You can limit the number of connections
-cookieCheck: true,		       //make sure the cookie is present (set to false if you are using as an API)
+limit:       0,  		       //You can limit the number of connections
+useCookie:   true,		       //make sure the cookie is present (set to false if you are using as an API)
 cookieKey:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
 useRedis: 				//Use Redis to store clients, necessary when spanning multiple processes
 redisHost:   '',                      //The host of the Redis store
@@ -95,6 +95,9 @@ Run this only after you have called "listen" on the server.
 You can pass any of the options from the official Socket.io configuration settings.
 ```
 useRedis: true, 		//Configures Socket.io to use Redis as it's store (needed for spanning multiple processes)
+redisHost: '',
+redisPort: '',
+redisPass: '',
 set: {
 	key: value,
 	key: value		//Used to pass settings to io.set(key, value);
