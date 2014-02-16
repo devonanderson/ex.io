@@ -67,10 +67,10 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 limit:        0,  		       //You can limit the number of connections
 cookieCheck: true,		       //make sure the cookie is present (set to false if you are using as an API)
 cookieKey:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
-production:   false,                   //Production mode uses a Redis store to scale over multiple processes
-redisHost:   '',                      //The host of the Redis store (production only)
-redisPort:   '',                      //The port of the Redis store (production only)
-redisPass:   '',                      //The password for the Redis store if you have one set (production only)
+useRedis: 				//Use Redis to store clients, necessary when spanning multiple processes
+redisHost:   '',                      //The host of the Redis store
+redisPort:   '',                      //The port of the Redis store
+redisPass:   '',                      //The password for the Redis store if you have one set
 authorize:    function (handshake) {   //Function called when negotiating the socket handshake, return a boolean
   return true;
 },
@@ -82,13 +82,33 @@ generate:     function (socket, req) { //Function called to generate an ID, has 
 },
 connect:      function (socket, req) { }, //Function called when a socket successfully connects
 disconnect:   function (req, message) { },  //Function called when a socket is disconnected
-transports:   [   //Which types of transports to use and the order in which they are used (production only)
-  'websocket',
-  'flashsocket',
-  'htmlfile',
-  'xhr-polling',
-  'jsonp-polling'
-]
+```
+
+###Socket.io Configuration
+
+By default Socket.io is not configured, you can choose to configure Socket.io by using
+```
+ionize.configSocketIo(opts);
+```
+Run this only after you have called "listen" on the server.
+
+You can pass any of the options from the official Socket.io configuration settings.
+```
+useRedis: true, 		//Configures Socket.io to use Redis as it's store (needed for spanning multiple processes)
+set: {
+	key: value,
+	key: value		//Used to pass settings to io.set(key, value);
+},
+enable: [ value, value ]	//Used to enable settings with io.enable(value);
+```
+
+Alternatively you can retrieve the Socket.io instance and do your own custom configuration using
+```
+var io = ionize.getSocketIoInstance();
+
+io.configure(function () {
+	io.set(...);
+});
 ```
 
 You can run the example located in the test folder to get an idea of what is needed for a base setup, as well as defining routes and handling incoming and outgoing messages.
