@@ -3,7 +3,7 @@ ionize
 
 Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level. Provides socket client management with the ability to define custom ID's for each socket. Also provides a wrapper around Socket.io's built in Redis store for integration into production environments.
 
-#### Getting started:
+### Getting started:
 
 Ionize is still in Alpha, and not yet available on npm. Clone this repo into your project root, then 
 
@@ -61,7 +61,7 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 });
 ```
 
-#### Settings
+### Settings
 
 ```
 limit:        0,  		       //You can limit the number of connections
