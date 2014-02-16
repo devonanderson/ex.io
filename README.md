@@ -66,11 +66,11 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ```
 limit:       0,  		       //You can limit the number of connections
 useCookie:   true,		       //make sure the cookie is present (set to false if you are using as an API)
-cookieKey:   'express.sid',           //The key of the Express cookie, only need to change if you are using a custom key
-useRedis: 				//Use Redis to store clients, necessary when spanning multiple processes
-redisHost:   '',                      //The host of the Redis store
-redisPort:   '',                      //The port of the Redis store
-redisPass:   '',                      //The password for the Redis store if you have one set
+cookieKey:   'express.sid',            //The key of the Express cookie, only need to change if you are using a custom key
+useRedis:    true	               //Use Redis to store clients, necessary when spanning multiple processes
+redisHost:   '',                       //The host of the Redis store
+redisPort:   '',                       //The port of the Redis store
+redisPass:   '',                       //The password for the Redis store if you have one set
 authorize:    function (handshake) {   //Function called when negotiating the socket handshake, return a boolean
   return true;
 },
@@ -80,8 +80,8 @@ authenticate: function (socket, req) { //Function called when a socket connects,
 generate:     function (socket, req) { //Function called to generate an ID, has access to the session, the session ID, the socket ID, and anything within the main Express middleware stack
   return socket.id;
 },
-connect:      function (socket, req) { }, //Function called when a socket successfully connects
-disconnect:   function (req, message) { },  //Function called when a socket is disconnected
+connect:      function (socket, req) { },  //Function called when a socket successfully connects
+disconnect:   function (req, message) { }, //Function called when a socket is disconnected
 ```
 
 ###Socket.io Configuration
