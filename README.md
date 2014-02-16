@@ -111,4 +111,6 @@ io.configure(function () {
 });
 ```
 
-You can run the example located in the test folder to get an idea of what is needed for a base setup, as well as defining routes and handling incoming and outgoing messages.
+###Example/Tests
+
+You can run the example located in the **test** folder to get an idea of what is needed for a base setup, as well as defining routes and handling incoming and outgoing messages.
