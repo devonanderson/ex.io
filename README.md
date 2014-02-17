@@ -25,7 +25,7 @@ app.set(...);
 app.set(...);
 app.set(express.cookieParser('abc123');
 app.set(express.session({ secret: 'abc123' }));
-app.set(ionize.middleware); //place ionize middleware wherever you want the request to end and move on to the route
+app.set(ionize.middleware()); //place ionize middleware wherever you want the request to end and move on to the route
 app.set(app.router) //ionize middleware must be placed above the app.router
 
 var server = http.createServer(app).listen(3000);
@@ -80,8 +80,8 @@ authenticate: function (socket, req) { //Function called when a socket connects,
 generate:     function (socket, req) { //Function called to generate an ID, has access to the session, the session ID, the socket ID, and anything within the main Express middleware stack
   return socket.id;
 },
-connect:      function (socket, req) { },  //Function called when a socket successfully connects
-disconnect:   function (req, message) { }, //Function called when a socket is disconnected
+connection:   function (req) { },  //Function called when a socket successfully connects, passes the connection request object
+disconnect:   function (req) { },  //Function called when a socket is disconnected passes the original connection request object
 ```
 
 ###Socket.io Configuration
@@ -105,9 +105,9 @@ set: {
 enable: [ value, value ]        //Used to enable settings with io.enable(value);
 ```
 
-Alternatively you can retrieve the Socket.io instance and do your own custom configuration using
+You can also retrieve the Socket.io instance and do your own custom configuration and event handling
 ```
-var io = ionize.getSocketIoInstance();
+var io = ionize.io;
 
 io.configure(function () {
 	io.set(...);
