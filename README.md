@@ -5,10 +5,8 @@ Node module that provides full-integration for Socket.io into Express using only
 
 ### Getting started:
 
-Ionize is still in Alpha, and not yet available on npm. Clone this repo into your project root, then 
-
 ```
-npm install ./ionize
+npm install ionize
 ```
 
 Then in your app.js file
