@@ -5,10 +5,8 @@ Node module that provides full-integration for Socket.io into Express using only
 
 ### Getting started:
 
-Ionize is still in Alpha, and not yet available on npm. Clone this repo into your project root, then 
-
 ```
-npm install ./ionize
+npm install ionize
 ```
 
 Then in your app.js file
@@ -39,7 +37,7 @@ ionize.route('myRoute', middleware, middleware, function (req, res) {
   console.log(req.socketRoute); //you can get the route that the socket is using 
   console.log(req.session); //you get the session along with anything else from the main app connect stack
   console.log(req.body) //access the passed data inside req.body;
-  console.log(req.clientID) //access the socket clients ID
+  console.log(req.io.ionize.id) //access the sockets clientID, that was created using the generate() function
   
   //You can access the clients socket
   req.io.emit('success', {
@@ -84,6 +82,14 @@ connection:   function (req) { },  //Function called when a socket successfully 
 disconnect:   function (req) { },  //Function called when a socket is disconnected passes the original connection request object
 ```
 
+You can dynamically define the available functions and events by using
+```
+ionize.on(event, function () { }); //events are connect and disconnet
+```
+```
+ionize.set(function, function () { }); //functions are authorize, authenticate and generate
+```
+
 ###Socket.io Configuration
 
 By default Socket.io is not configured, you can choose to configure Socket.io by using
@@ -112,6 +118,24 @@ var io = ionize.io;
 io.configure(function () {
 	io.set(...);
 });
+```
+
+###Methods
+```
+//retrieves a socket based on its client ID and triggers socket.emit(route, data);
+ionize.triggerSocket(route, clientID, data, callback); 
+
+//retrieves a socket and triggers a route defined by ionize.route(...), you can pass a socket instance in place of clientID
+ionize.triggerRoute(route, clientID, data, callback);
+
+//retrieves a socket by its client ID
+ionize.getClientById(clientID, callback);
+
+//retrieves a socket by its client ID and disconnects it
+ionize.disconnectClient(clientID, callback);
+
+//returns all of the sockets (alias for io.sockets.sockets)
+ionize.getClients();
 ```
 
 ###Example/Tests
