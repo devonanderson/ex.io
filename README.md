@@ -82,6 +82,14 @@ connection:   function (req) { },  //Function called when a socket successfully 
 disconnect:   function (req) { },  //Function called when a socket is disconnected passes the original connection request object
 ```
 
+You can dynamically define the available functions and events by using
+```
+ionize.on(event, function () { }); //events are connect and disconnet
+```
+```
+ionize.set(function, function () { }); //functions are authorize, authenticate and generate
+```
+
 ###Socket.io Configuration
 
 By default Socket.io is not configured, you can choose to configure Socket.io by using
@@ -126,7 +134,7 @@ ionize.getClientById(clientID, callback);
 //retrieves a socket by its client ID and disconnects it
 ionize.disconnectClient(clientID, callback);
 
-//returns all of the sockets (alias for io.sockets.sockets
+//returns all of the sockets (alias for io.sockets.sockets)
 ionize.getClients();
 ```
 
