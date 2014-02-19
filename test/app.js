@@ -75,14 +75,14 @@ var endError = function (req, res) {
 ionize.route('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
 
 var triggerRoute = function (req, res) {
-	var clientID = req.clientID; //the id of the connected socket is available;
+	var clientID = req.io.ionize.id; //the id of the connected socket is available;
 	
 	var data = {
 		message: 'This route was triggered'
 	};
 
 	/* 	you can trigger routes from anywhere within Node and pass it data */
-	ionize.triggerRoute('test:triggerFinish', clientID, data); 
+	ionize.triggerRoute('test:triggerFinish', req.io, data); 
 }
 
 ionize.route('test:triggerStart', triggerRoute);
@@ -97,7 +97,7 @@ var triggerCaught = function (req, res) {
 ionize.route('test:triggerFinish', triggerCaught);
 
 var disconnect = function (req, res) {
-	var clientID = req.clientID;
+	var clientID = req.io.ionize.id;
 
 	//you can also disconnect clients at any point with a clientID
 	ionize.disconnectClient(clientID, function (err) {
