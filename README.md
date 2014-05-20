@@ -69,14 +69,14 @@ useRedis:    false                     //Use Redis to store clients, necessary w
 redisHost:   '',                       //The host of the Redis store
 redisPort:   '',                       //The port of the Redis store
 redisPass:   '',                       //The password for the Redis store if you have one set
-authorize:    function (handshake) {   //Function called when negotiating the socket handshake, return a boolean
-  return true;
+authorize:    function (handshake, callback) {   //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
+  callback(null, true);
 },
-authenticate: function (socket, req) { //Function called when a socket connects, returns a boolean value
-  return true;
+authenticate: function (socket, req, callback) { //Function called when a socket connects
+  callback(null, true)
 },
-generate:     function (socket, req) { //Function called to generate an ID, has access to the session, the session ID, the socket ID, and anything within the main Express middleware stack
-  return socket.id;
+generate:     function (socket, req, callback) { //Function called to generate an ID that will be associated with the socket, pass the desired ID to the callback
+  callback(socket.id);
 },
 connection:   function (req) { },  //Function called when a socket successfully connects, passes the connection request object
 disconnect:   function (req) { },  //Function called when a socket is disconnected passes the original connection request object
