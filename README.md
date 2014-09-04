@@ -1,6 +1,8 @@
 ionize
 =====
 
+Currently only supports Socket.io 0.9.x, will be updating for 1.x soon
+
 Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level. Provides socket client management with the ability to define custom ID's for each socket. Also provides a wrapper around Socket.io's built in Redis store for integration into production environments.
 
 ### Getting started:
