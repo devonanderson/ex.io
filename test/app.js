@@ -61,7 +61,7 @@ var endSuccess = function (req, res) {
 }
 
 //routes are defined almost exactly like express and includes chainable middleware
-ionize.route('test:success', middlewareSuccess, endSuccess); //pass null as the last argument if you don't need an error handler
+ionize.set('test:success', middlewareSuccess, endSuccess); //pass null as the last argument if you don't need an error handler
 
 var middlewareError = function (req, res, next) {
 	console.log('This is middleware with an error');
@@ -72,7 +72,7 @@ var endError = function (req, res) {
 	console.log('You will never make it here');
 }
 
-ionize.route('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
+ionize.set('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
 
 var triggerRoute = function (req, res) {
 	var clientID = req.io.ionize.id; //the id of the connected socket is available;
@@ -85,7 +85,7 @@ var triggerRoute = function (req, res) {
 	ionize.triggerRoute('test:triggerFinish', req.io, data); 
 }
 
-ionize.route('test:triggerStart', triggerRoute);
+ionize.set('test:triggerStart', triggerRoute);
 
 var triggerCaught = function (req, res) {
 	console.log('Caught the triggered route');
@@ -94,7 +94,7 @@ var triggerCaught = function (req, res) {
 	req.io.emit('triggered', req.body); //everything available in a normal route is available in a triggered route
 }
 
-ionize.route('test:triggerFinish', triggerCaught);
+ionize.set('test:triggerFinish', triggerCaught);
 
 var disconnect = function (req, res) {
 	var clientID = req.io.ionize.id;
@@ -105,4 +105,4 @@ var disconnect = function (req, res) {
 	});
 }
 
-ionize.route('test:disconnect', disconnect);
+ionize.set('test:disconnect', disconnect);

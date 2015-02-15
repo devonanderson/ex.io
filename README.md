@@ -64,54 +64,37 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ### Settings
 
 ```
-limit:       0,                        //You can limit the number of connections
-useCookie:   true,		       //make sure the cookie is present (set to false if you are using as an API)
-cookieKey:   'express.sid',            //The key of the Express cookie, only need to change if you are using a custom key
-useRedis:    false                     //Use Redis to store clients, necessary when spanning multiple processes
-redisHost:   '',                       //The host of the Redis store
-redisPort:   '',                       //The port of the Redis store
-redisPass:   '',                       //The password for the Redis store if you have one set
-authorize:    function (handshake, callback) {   //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
+limit: 0,                            //You can limit the number of connections
+useCookie: true,		                 //make sure the cookie is present (set to false if you are using as an API)
+cookieKey: 'express.sid',            //The key of the Express cookie, only need to change if you are using a custom key
+useRedis: false                      //Use Redis to store clients, necessary when spanning multiple processes
+redisHost: '',                       //The host of the Redis store
+redisPort: '',                       //The port of the Redis store
+redisPass: '',                       //The password for the Redis store if you have one set
+authorize: function (handshake, callback) {   //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
   callback(null, true);
 },
 authenticate: function (socket, req, callback) { //Function called when a socket connects
   callback(null, true)
 },
-generate:     function (socket, req, callback) { //Function called to generate an ID that will be associated with the socket, pass the desired ID to the callback
+generate: function (socket, req, callback) {     //Function called to generate an ID that will be associated with the socket, pass the desired ID to the callback
   callback(socket.id);
 },
-connection:   function (req) { },  //Function called when a socket successfully connects, passes the connection request object
-disconnect:   function (req) { },  //Function called when a socket is disconnected passes the original connection request object
+connection: function (req) { },  //Function called when a socket successfully connects, passes the connection request object
+disconnect: function (req) { },  //Function called when a socket is disconnected passes the original connection request object
+set: {},      //keys to set for socket.io configuration (i.e io.set())
+enable: {}    //keys to set for socket.io configuration (i.e io.enable())
 ```
 
 You can dynamically define the available functions and events by using
 ```
-ionize.on(event, function () { }); //events are connect and disconnet
+ionize.on(event, function () { }); //events are "connect" and "disconnet"
 ```
 ```
-ionize.set(function, function () { }); //functions are authorize, authenticate and generate
+ionize.configure(function, function () { }); //functions are "authorize", "authenticate" and "generate"
 ```
 
 ###Socket.io Configuration
-
-By default Socket.io is not configured, you can choose to configure Socket.io by using
-```
-ionize.configSocketIo(opts);
-```
-Run this only after you have called "listen" on the server.
-
-You can pass any of the options from the official Socket.io configuration settings.
-```
-useRedis: true, 		//Configures Socket.io to use Redis as it's store (needed for spanning multiple processes)
-redisHost: '',
-redisPort: '',
-redisPass: '',
-set: {
-	key: value,
-	key: value              //Used to pass settings to io.set(key, value);
-},
-enable: [ value, value ]        //Used to enable settings with io.enable(value);
-```
 
 You can also retrieve the Socket.io instance and do your own custom configuration and event handling
 ```
