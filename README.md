@@ -1,5 +1,5 @@
-ionize
-=====
+Ionize
+======
 
 Currently only supports Socket.io 0.9.x, will be updating for 1.x soon
 
@@ -35,7 +35,7 @@ ionize = ionize.create(app, {
   secret: 'abc123' 
 }).listen(server);
 
-ionize.route('myRoute', middleware, middleware, function (req, res) {
+ionize.set('myRoute', middleware, middleware, function (req, res) {
   console.log(req.socketRoute); //you can get the route that the socket is using 
   console.log(req.session); //you get the session along with anything else from the main app connect stack
   console.log(req.body) //access the passed data inside req.body;
@@ -96,7 +96,7 @@ ionize.configure(function, function () { }); //functions are "authorize", "authe
 
 ###Socket.io Configuration
 
-You can also retrieve the Socket.io instance and do your own custom configuration and event handling
+You can retrieve the Socket.io instance from ionize and do your own custom configuration and event handling
 ```
 var io = ionize.io;
 
@@ -110,7 +110,7 @@ io.configure(function () {
 //retrieves a socket based on its client ID and triggers socket.emit(route, data);
 ionize.triggerSocket(route, clientID, data, callback); 
 
-//retrieves a socket and triggers a route defined by ionize.route(...), you can pass a socket instance in place of clientID
+//retrieves a socket and triggers a route defined by ionize.set(...), you can pass a socket instance in place of clientID
 ionize.triggerRoute(route, clientID, data, callback);
 
 //retrieves a socket by its client ID
