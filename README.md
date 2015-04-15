@@ -1,7 +1,7 @@
 Ionize
 ======
 
-*UPDATED* - Now supports ```Socket.io 1.*``` and ```Express 4.*``` 
+**UPDATED** - Now supports ```Socket.io 1.x``` and ```Express 4.x``` 
 
 Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level.
 
@@ -63,15 +63,15 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ### Settings
 
 ```
-useCookie: true,		                 //make sure the cookie is present (set to false if you are using as an API)
-cookieKey: 'connect.sid',            //The key of the Express cookie, only need to change if you are using a custom key
-authorize: function (handshake, callback) {   //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
+useCookie: true, //make sure the cookie is present (set to false if you are using as an API)
+cookieKey: 'connect.sid', //The key of the Express cookie, only need to change if you are using a custom key
+authorize: function (handshake, callback) { //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
   callback(null, true);
 },
 authenticate: function (socket, req, callback) { //Function called when a socket connects
   callback(null, true)
 },
-connection: function (req) { },  //Function called when a socket successfully connects, is passed the connection request object
+connection: function (req) { }, //Function called when a socket successfully connects, is passed the connection request object
 ```
 
 You can dynamically define the configuration functions and events by using
