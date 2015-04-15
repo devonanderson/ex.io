@@ -1,7 +1,7 @@
 Ionize
 ======
 
-*UPDATED* - Now supports ```Socket.io - 1.*``` and ```Express 4.*``` 
+*UPDATED* - Now supports ```Socket.io 1.*``` and ```Express 4.*``` 
 
 Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level.
 
