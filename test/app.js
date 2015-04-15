@@ -3,29 +3,30 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var routes = require('./routes');
-var http = require('http');
-var path = require('path');
-var ionize = require('../lib/ionize.js');
+var express = require('express')
+,	routes = require('./routes')
+,	http = require('http')
+,	path = require('path')
+,	ionize = require('../lib/ionize.js');
 
-var app = express();
+var app = express()
+,	bodyParser = require('body-parser')
+,	methodOverride = require('method-override')
+,	cookieParser = require('cookie-parser')
+,	session = require('express-session');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser('abc123'));
-app.use(express.session({ secret: 'abc123' }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded())
+app.use(methodOverride());
+app.use(cookieParser('abc123'));
+app.use(session({ secret: 'abc123' }));
 app.use(ionize.middleware()); //the ionize middleware is required, put it wherever you want your request to end.
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.errorHandler());
+app.use(function (err, req, res, next) { });
 
 app.get('/', routes.index);
 
@@ -39,70 +40,60 @@ ionize.create(app, {
   	secret: 'abc123' //make sure you use the same secret you passed to the session middleware
 }).listen(server);
 
-//define route specific middleware
-var middlewareSuccess = function (req, res, next) {
-	console.log('This is the middleware');
+//routes are defined almost exactly like express and includes chainable middleware
+ionize.set('test:success', 
+function (req, res, next) { //define route specific middleware
+	
+	console.log('Ionize: This is the middleware for the test:success route');
 	req.foo = 'bar'; //add persistent variables to the request
 
 	next();
-}
+}, 
+function (req, res) {
 
-var endSuccess = function (req, res) {
-	console.log('This is the end of the route');
-	console.log(req.socketRoute); //you can get the route that the socket is using 
-	console.log(req.foo); //variables attached through middleware can be accessed
-	console.log(req.session); //you get the session along with anything else from the main app connect stack
-	console.log(req.body) //access the passed data inside req.body;
+	console.log('Ionize: This is the end of the test:success route');
+	console.log('Ionize: The route is ' + req.socketRoute); //you can get the route that the socket is using 
+	console.log('Ionize: req.foo = ' + req.foo); //variables attached through middleware can be accessed
+	console.log('Ionize: req.session ='); //you get the session along with anything else from the main app connect stack
+	console.log(req.session);
+	console.log('Ionize: req.body =') //access the passed data inside req.body;
+	console.log(req.body);
 
 	//You can access the socket at each step
 	req.io.emit('success', {
-		message: 'THIS'
+		message: 'THIS LINE OF TEXT.'
 	});
-}
+}); //pass null as the last argument if you don't need an error handler
 
-//routes are defined almost exactly like express and includes chainable middleware
-ionize.set('test:success', middlewareSuccess, endSuccess); //pass null as the last argument if you don't need an error handler
+ionize.set('test:error', 
+function (req, res, next) {
 
-var middlewareError = function (req, res, next) {
-	console.log('This is middleware with an error');
-	next(new Error('This makes it to the error handler'))
-}
-
-var endError = function (req, res) {
-	console.log('You will never make it here');
-}
-
-ionize.set('test:error', middlewareError, endError); //pass an error handler that will be accessible in the request object
-
-var triggerRoute = function (req, res) {
-	var clientID = req.io.ionize.id; //the id of the connected socket is available;
+	console.log('Ionize: This is middleware with an error');
 	
+	next(new Error());
+}, 
+function (req, res) {
+
+	console.log('Ionize: You will never make it here');
+}); //pass an error handler that will be accessible in the request object
+
+
+ionize.set('test:triggerStart', 
+function (req, res) {
+
 	var data = {
-		message: 'This route was triggered'
+		message: 'Ionize: this is from a triggered route test:triggerFinish'
 	};
 
-	/* 	you can trigger routes from anywhere within Node and pass it data */
-	ionize.triggerRoute('test:triggerFinish', req.io, data); 
-}
+	/* 	you can trigger routes from anywhere and pass it data */
+	ionize.trigger('test:triggerFinish', req.io, data); 
+});
 
-ionize.set('test:triggerStart', triggerRoute);
+ionize.set('test:triggerFinish', 
+function (req, res) {
 
-var triggerCaught = function (req, res) {
-	console.log('Caught the triggered route');
+	console.log('Ionize: Caught the triggered route test:triggerFinish');
 	console.log(req.body);
 
 	req.io.emit('triggered', req.body); //everything available in a normal route is available in a triggered route
-}
-
-ionize.set('test:triggerFinish', triggerCaught);
-
-var disconnect = function (req, res) {
-	var clientID = req.io.ionize.id;
-
-	//you can also disconnect clients at any point with a clientID
-	ionize.disconnectClient(clientID, function (err) {
-		console.log('I disconnected you');
-	});
-}
-
-ionize.set('test:disconnect', disconnect);
+});

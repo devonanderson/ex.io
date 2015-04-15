@@ -5,12 +5,17 @@ html
 	link(rel='stylesheet', href='/stylesheets/style.css')
 	script(src='/socket.io/socket.io.js')
 	script().
-		var socket = io.connect('http://localhost');
+		var socket = io.connect('http://localhost:3000');
 
-		socket.on('exio:connect', function () { //ex.io has it's own connect event, which may be fired after the Socket.io one
+		socket.on('ionize:connect', function () { //ionize has it's own connect event, which may be fired after the Socket.io one
+			console.log('Ionize: connected with ionize:connect');
+
 			socket.emit('test:success', {
 				data: 'This is some data'
 			});
+
+			socket.emit('test:triggerStart');
+			socket.emit('test:error');
 		});
 
 		socket.on('success', function (req) {
@@ -20,9 +25,5 @@ html
 		socket.on('triggered', function (req) {
 			console.log(req.message);
 		});
-
-		socket.emit('test:error');
-		socket.emit('test:triggerStart');
-		socket.emit('test:disconnect');
 body
 	block content

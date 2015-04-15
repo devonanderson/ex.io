@@ -1,9 +1,9 @@
 Ionize
 ======
 
-Currently only supports Socket.io 0.9.x, will be updating for 1.x soon
+*UPDATED* - Now supports ```Socket.io - 1.*``` and ```Express 4.*``` 
 
-Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level. Provides socket client management with the ability to define custom ID's for each socket. Also provides a wrapper around Socket.io's built in Redis store for integration into production environments.
+Node module that provides full-integration for Socket.io into Express using only exposed Express API methods. Provides Express like routing, pushing socket requests through the Express main middleware stack as well as allowing middleware definitions at the route level.
 
 ### Getting started:
 
@@ -23,10 +23,9 @@ var app = express();
 app.set(...);
 app.set(...);
 app.set(...);
-app.set(express.cookieParser('abc123');
-app.set(express.session({ secret: 'abc123' }));
+app.set(cookieParser('abc123');
+app.set(session({ secret: 'abc123' }));
 app.set(ionize.middleware()); //place ionize middleware wherever you want the request to end and move on to the route
-app.set(app.router) //ionize middleware must be placed above the app.router
 
 var server = http.createServer(app).listen(3000);
 
@@ -64,34 +63,23 @@ socket.on('ionize:connect', function () { //ionize has it's own connect event, w
 ### Settings
 
 ```
-limit: 0,                            //You can limit the number of connections
 useCookie: true,		                 //make sure the cookie is present (set to false if you are using as an API)
-cookieKey: 'express.sid',            //The key of the Express cookie, only need to change if you are using a custom key
-useRedis: false                      //Use Redis to store clients, necessary when spanning multiple processes
-redisHost: '',                       //The host of the Redis store
-redisPort: '',                       //The port of the Redis store
-redisPass: '',                       //The password for the Redis store if you have one set
+cookieKey: 'connect.sid',            //The key of the Express cookie, only need to change if you are using a custom key
 authorize: function (handshake, callback) {   //Function called when negotiating the socket handshake, the callback accepts an error message and a boolean (true to allow, false to deny and return the error message)
   callback(null, true);
 },
 authenticate: function (socket, req, callback) { //Function called when a socket connects
   callback(null, true)
 },
-generate: function (socket, req, callback) {     //Function called to generate an ID that will be associated with the socket, pass the desired ID to the callback
-  callback(socket.id);
-},
-connection: function (req) { },  //Function called when a socket successfully connects, passes the connection request object
-disconnect: function (req) { },  //Function called when a socket is disconnected passes the original connection request object
-set: {},      //keys to set for socket.io configuration (i.e io.set())
-enable: {}    //keys to set for socket.io configuration (i.e io.enable())
+connection: function (req) { },  //Function called when a socket successfully connects, is passed the connection request object
 ```
 
-You can dynamically define the available functions and events by using
+You can dynamically define the configuration functions and events by using
 ```
-ionize.on(event, function () { }); //events are "connect" and "disconnet"
+ionize.on(event, function () { }); //events are "connect"
 ```
 ```
-ionize.configure(function, function () { }); //functions are "authorize", "authenticate" and "generate"
+ionize.configure(function, function () { }); //functions are "authorize", "authenticate"
 ```
 
 ###Socket.io Configuration
@@ -100,27 +88,13 @@ You can retrieve the Socket.io instance from ionize and do your own custom confi
 ```
 var io = ionize.io;
 
-io.configure(function () {
-	io.set(...);
-});
+io.use(function () { });
 ```
 
-###Methods
+###Triggering
 ```
-//retrieves a socket based on its client ID and triggers socket.emit(route, data);
-ionize.triggerSocket(route, clientID, data, callback); 
-
-//retrieves a socket and triggers a route defined by ionize.set(...), you can pass a socket instance in place of clientID
-ionize.triggerRoute(route, clientID, data, callback);
-
-//retrieves a socket by its client ID
-ionize.getClientById(clientID, callback);
-
-//retrieves a socket by its client ID and disconnects it
-ionize.disconnectClient(clientID, callback);
-
-//returns all of the sockets (alias for io.sockets.sockets)
-ionize.getClients();
+//triggers a route defined by ionize.set(...)
+ionize.triggerRoute(route, socket, data, callback);
 ```
 
 ###Example/Tests
